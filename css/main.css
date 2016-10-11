@@ -1,0 +1,438 @@
+
+html, body{
+    height: 100%;
+    width:1440;
+    margin: 0 auto;
+}
+
+#holder{
+    min-height: 100%;
+    position:relative;
+}
+
+
+
+#full_page_div{
+    width: 80%;
+    margin: 0px auto;
+}
+
+#wrapper {
+    min-height:100%;
+    position:relative;
+}
+
+#header{
+    padding-top: 6px;
+    text-align: center;
+    font-size: 25px;
+    background: #f47c6c;
+    opacity: 0.95;
+    border: 0px white solid;
+    border-radius: 5px
+}
+
+#footer{
+    text-align: center;
+    font-size: 15px;
+    height: 55px;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    margin-top:100px;
+}
+
+
+#index_body{
+    margin: 0px auto;
+    margin: 0px auto;
+}
+
+
+#example td {
+    text-align: center;
+}
+
+#example td:nth-child(4){
+    text-align: left;
+}
+
+.search_result_table_title{
+    font-size:20px; 
+    font-weight:bold; 
+    background-color:#fff5f0; 
+    padding:5px; 
+    text-align:center;
+}
+
+#global_description_results_table td {
+    text-align: center;
+}
+
+#global_description_results_table td:nth-child(3){
+    text-align: left;
+}
+
+
+#global_name_results_table td {
+    text-align: center;
+}
+
+#global_name_results_table td:nth-child(3){
+    text-align: left;
+}
+
+#adv_search_res_table td {
+    text-align: center;
+}
+
+#adv_search_res_table td:nth-child(3){
+    text-align: left;
+}
+
+
+.table_style{
+    text-align: center; 
+    padding: 16px; 
+    font-size: 16px;
+    color: grey;
+    background-color: #fcfcfc;
+    border: 1px solid; 
+    box-shadow:4px 4px 2px #888888; 
+    border-radius: 0px;
+}
+
+#all_datasets_browse_form {
+    text-align: left;
+    padding-top: 12px;
+    padding-left: 10px;
+    border: 1px dotted;
+}
+
+#mods_advanced_search_form{
+    text-align: left;
+    padding-left: 30px;
+    padding-top: 15px;
+    padding-bottom: 10px;
+    border: 3px groove;
+    background-color: #f4f7f9;
+}
+
+#mods_advanced_search_form2{
+    text-align: left;
+    padding-left: 30px;
+    padding-top: 15px;
+    padding-bottom: 10px;
+    border: 3px groove #dadada;
+    background-color: #f4f7f9;
+}
+
+#dataset_mods_advanced_search_form{
+    text-align: left;
+    padding-left: 30px;
+    padding-top: 15px;
+    padding-bottom: 10px;
+    border: 3px groove;
+    background-color: #f4f7f9;
+}
+
+#form_template{
+    font-size: 15px;
+}
+
+#form_template2{
+    font-size: 15px;
+}
+
+#adv_form_template{
+    font-size: 15px;
+}
+
+#advanced_search_form {
+    text-align: left;
+    padding-left: 30px;
+    padding-top: 15px;
+    padding-bottom: 10px;
+    border: 3px groove;
+    background-color: #f4f7f9;
+ }
+
+
+.search_form {
+    text-align: left;
+    border: 1px dotted;
+}
+
+#index_mirna_search_form{
+    text-align: left;
+    padding: 30px;
+    /*padding-top: 20px;
+    padding-bottom: 10px;
+    padding-left: 10px;*/
+    border: 3px groove;
+    background-color: #FAFAFA;
+    float:top;
+    width: 480px; 
+}
+
+
+#index_search_form {
+    text-align: left;
+    padding: 30px;
+    /*padding-top: 20px;
+    padding-bottom: 10px;
+    padding-left: 10px;*/
+    border: 3px groove;
+    background-color: #FAFAFA;
+    width: 480px; 
+}
+
+a:link {
+    text-decoration: none;
+}
+
+a:visited {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+#ubiquitous_search_form {
+    width: 380px;
+    background-color: #F0F0F0;
+}
+.single_dataset_table_title {
+    background-color: #fff;
+    padding: 10px;
+    border: 2px groove;
+    font-size: 18px;
+}
+
+a.single_dataset_table_title:link, a.single_dataset_table_title:visited {
+    color: #000088;
+    text-decoration: none;
+}
+
+a.header:link, a.header:visited { 
+    color: #FFF;
+    text-decoration: none;
+}
+
+#menu_bar{
+    margin-bottom: 30px;
+    margin-top: 4px;
+    padding-bottom: 10px;
+}
+
+
+#menu_bar ul {
+    float: left;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+#menu_bar a {
+    float: left;
+    text-align: center;
+    text-decoration: none;
+    color: white;
+    background-color: #565253;
+    padding: 0.2em 0.6em;
+    border-right: 1px solid white;
+}
+
+#homepage_descr {
+    padding-top: 10px; 
+    padding-bottom: 10px; 
+    margin-bottom: 10px;
+    border-radius:10px;
+    background-color: #eff4f9;
+}
+
+#menu_bar a:hover {
+    background-color: #e8a39a;
+}
+
+#run_search_div {
+    margin-top: 10px;
+}
+
+#datasets_expression_table{
+    font-size:16px; 
+    text-align:center; 
+    background-color:#fafafa;
+}
+
+#datasets_profile_table{
+    font-size:11px;
+    text-align:center;
+    background-color:#fafafa;
+}
+
+
+#global_expression_table{
+    font-size:14px; 
+    text-align:center; 
+    background-color:#fafafa; 
+}
+
+
+#annotation_table  a {
+	color: #23a1c2;
+}
+
+#annotation_table{
+    padding:0;
+    font-size:15px; 
+    text-align:center; 
+    float: center; 
+    width: 60%;
+    border: 2px ridge;
+    margin-bottom:20px;
+}
+
+#global_coex_table{
+    font-size:13px; 
+    text-align:center; 
+    padding:0;
+}
+
+.collapse_container .collapse_content {
+    display: none;
+    padding : 5px;
+}
+
+#mxa_res_table{
+    text-align: center;
+}
+
+#mir_expr_profile_for_dataset_table {
+    background-color:#e4ecf4;
+    padding:24px;
+    text-align:left;
+    margin-top:20px;
+    margin-bottom:50px;
+    width:400px;
+    border:2px #bdbdbd solid;
+    border-radius: 6px;
+}
+
+.adv_mod_search_category{
+    color:black;
+    font-size:16px; 
+    font-weight:bold; 
+    padding:7px; 
+    padding-left:15px; 
+    background-color:#e4ebf2;
+    margin-bottom:0px;
+    border-radius:3px;
+    border: 1px solid black;
+}
+
+
+#analysed_data_table_title {
+    box-shadow: 3px 3px 1px #888888;
+    background-color:#fafafa; 
+    font-size:18px; 
+    padding:8px; 
+    text-align:left; 
+    font-weight: bold; 
+    margin-top:30px; 
+    width:632px; 
+    border:1px groove;
+}
+
+.dataset_annotation_entry{
+    font-size:17px; 
+    background-color:#F2F2F2; 
+    padding-left:8px; 
+    padding-top:8px; 
+    border:1px solid; 
+}
+
+.CSS_Table_Dataset_Views{
+	margin:0px;padding:0px;
+	width:100%;
+	box-shadow: 3px 3px 1px #888888;
+	border:2px solid #999;
+    font-family: verdana,arial,sans-serif;
+    font-size:12px;
+    border-collapse: collapse;
+}
+
+.CSS_Table_Dataset_Views th{
+    background-color: #E0ECF8;
+}
+
+.CSS_Table_Dataset_Views tr td{
+    font-size:13px;
+    padding-left:12px;
+    border: 2px solid #999999;
+}
+
+.CSS_Table_Dataset_Views tr:hover td{
+background-color:;
+}
+
+#template_counts_table{
+    text-align: center;
+}
+
+#mir_expr_colorbar {
+    width:250px; 
+    height:30px; 
+    background: linear-gradient(to right, rgb(255,255,255) , rgb(0,94,255)); /* Standard syntax */
+}
+
+.mods_ratio_colorbar{
+    width:100%;
+    height:30px;
+}
+
+#arm_mods_ratio_colorbar{
+    background: linear-gradient(to right, rgb(255, 255, 255) , rgb(0,170,255)); /* Standard syntax */
+}
+
+
+#arm_3p_mods_ratio_colorbar{
+    background: linear-gradient(to right, rgb(255,255,255) , rgb(187,255,51)); /* Standard syntax */
+}
+
+
+#internal_mods_ratio_colorbar{
+    background: linear-gradient(to right, rgb(255,255,255) , rgb(255,21,0)); /* Standard syntax */
+}
+
+
+#arm_5p_mods_ratio_colorbar{
+    background: linear-gradient(to right, rgb(255,255,255) , rgb(255,149,0)); /* Standard syntax */
+}
+
+.rotate90 {
+
+    /* Safari */
+    -webkit-transform: rotate(-90deg);
+
+    /* Firefox */
+    -moz-transform: rotate(-90deg);
+
+    /* IE */
+    -ms-transform: rotate(-90deg);
+
+    /* Opera */
+    -o-transform: rotate(-90deg);
+
+    /* Internet Explorer */
+    filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+
+}
+
+.datatable-scroll {
+    overflow-x: auto;
+    overflow-y: visible;
+}
+
