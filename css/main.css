@@ -3,6 +3,7 @@ html, body{
     height: 100%;
     width:1440;
     margin: 0 auto;
+    background: #fbfbfb;
 }
 
 #holder{
@@ -20,6 +21,7 @@ html, body{
 #wrapper {
     min-height:100%;
     position:relative;
+    padding:6px;
 }
 
 #header{

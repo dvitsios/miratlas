@@ -1,4 +1,5 @@
-<div id='footer'>
+<div id='footer' style='width:99%;'>
+<br/>
 <hr />
 Miratlas release 1.0
 <br />

@@ -97,13 +97,13 @@ Modification Stats by: 'miRNA'
 <b>miRNA ID(s)<span style='color:red'>*</span></b>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <input id='mods_mirs_input' name="mods_advanced_search1[]" type="text" onkeyup="if($(this).val() != '') $('.checkbox_class').enable()" size="40" value="<?php echo $_GET['mods_advanced_search1'][0]?>"/>
-<span style="font-size:14px; padding-left:20px; font-family:Palatino"><i>(e.g. hsa-let-7, hsa-let-7g-5p)</i></span>
+<span style="font-size:14px; padding-left:20px; font-family:Palatino"><i>(e.g. hsa-let-7, mmu-mir-100, mir-21a- )</i></span>
 </li>
 <br />
 
 <li>
-<b>Sample properties</b>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id='mods_sample_properties' name="mods_advanced_search1[]" type="text" size="40" value="<?php echo $_GET['mods_advanced_search1'][1]?>"/>
-<span style="font-size:14px; padding-left:20px; font-family:Palatino"><i>(e.g. liver, cancer)</i></span>
+<b>Sample properties<span style='color:red'>*</span></b>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id='mods_sample_properties' name="mods_advanced_search1[]" type="text" size="40" value="<?php echo $_GET['mods_advanced_search1'][1]?>"/>
+<span style="font-size:14px; padding-left:20px; font-family:Palatino"><i>(e.g. liver, cancer, brain)</i></span>
 <br />
 </li>
 <br />
@@ -136,8 +136,8 @@ Modification Stats by: 'mod. pattern'
 
 <li>
 <!-- <input type="checkbox" name="mod_search_terms2" value="sample_properties"> -->
-<b>Sample properties</b>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id='mods_sample_properties2' name="mods_advanced_search2[]" type="text" size="40" value="<?php echo $_GET['mods_advanced_search2'][1]?>"/>
-<span style="font-size:14px; padding-left:20px; font-family:Palatino"><i>(e.g. brain, leukemia)</i></span>
+<b>Sample properties<span style='color:red'>*</span></b>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id='mods_sample_properties2' name="mods_advanced_search2[]" type="text" size="40" value="<?php echo $_GET['mods_advanced_search2'][1]?>"/>
+<span style="font-size:14px; padding-left:20px; font-family:Palatino"><i>(e.g. brain, leukemia, serum)</i></span>
 <br />
 </li>
 <br />

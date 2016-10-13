@@ -1,3 +1,8 @@
+<?php
+	# generate tmp uuid 
+	$uuid = uniqid();
+?>
+
 <html>
 
 
@@ -62,31 +67,35 @@
                 });
             });
 
+	    var uuid = "<?php echo $uuid; ?>";
+	    var plain_ajax_src = 'tmp/'+uuid+'.ajax.table.counts';
+
 	    $('table#mod_stats_by_mir_table').dataTable( {
-	    	"dom": 'T<"clear">lfrtip',
-		"tableTools": {
-			"aButtons":
-				[
-				{
-					"sExtends":    "collection",
-					"sButtonText": "Save Page as...",
-					"aButtons":    [ "csv", "xls"],
-					"bFooter": false,
-				}
-				],
-				"sSwfPath": "./assets/DataTables-1.10.4/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
-		},
-		"columnDefs": [
-			{ "width": "13%", "targets": [0, 1] }
-		],
-		"processing": true,
-		"iDisplayLength": 20,
-		"aLengthMenu": [[10, 20, 40, -1], [10, 20, 40, "All"]],
-		"caseInsensitive": true,
-		"searching": true,
-		"deferRender": false,
-		"order": [[ 10, "desc" ]],
-		"bProcessing": true,
+			"dom": 'T<"clear">lfrtip',
+			"sAjaxSource": plain_ajax_src,
+			"tableTools": {
+				"aButtons":
+					[
+					{
+						"sExtends":    "collection",
+						"sButtonText": "Save Page as...",
+						"aButtons":    [ "csv", "xls"],
+						"bFooter": false,
+					}
+					],
+					"sSwfPath": "./assets/DataTables-1.10.4/extensions/TableTools/swf/copy_csv_xls_pdf.swf"
+			},
+			"columnDefs": [
+				{ "width": "13%", "targets": [0, 1] }
+			],
+			"processing": true,
+			"iDisplayLength": 20,
+			"aLengthMenu": [[10, 20, 40, -1], [10, 20, 40, "All"]],
+			"caseInsensitive": true,
+			"searching": true,
+			"deferRender": true,
+			"order": [[ 10, "desc" ]],
+			"bProcessing": true
 		});
     });
 
@@ -159,6 +168,16 @@ echo "</div>";
 
 echo "<h2>Results</h2>";
 
+
+
+if($mirs_to_search == '' or $sample_properties_to_search == ''){
+#if($mirs_to_search == ''){
+	echo "No results found. Please specify an argument at all input fields.";
+	echo "<br/><br/><br/><br/><br/><br/><br/><br/><br/>";
+	include('footer.php');
+	exit;
+} else{
+
 echo "<div class='adv_mod_search_category' style='width:98%'>";
 echo "<b>Aggregate modifications profile</b>";
 echo "</div>";
@@ -168,26 +187,30 @@ echo "</div>";
 echo "<br/><hr/>";
 
 
-#if($mirs_to_search == '' or $sample_properties_to_search == ''){
-if($mirs_to_search == ''){
-	echo "No results found. Please specify an argument at all input fields.";
-} else{
-
-
-
 # select datasets that correspond to the input sample properties
 $selected_datasets = array();
 
 $cond_query_term = '';
+$cond_term_cnt = 0;
 $conditions_to_query = split(",", $sample_properties_to_search);
 foreach ($conditions_to_query as $cond){
 	$cond = trim($cond);
 	$cond_query_term .= $cond."|";
+	$cond_term_cnt++;
 }
 $cond_query_term = substr($cond_query_term, 0, -1);
-if($sample_properties_to_search == ''){
-	$cond_query_term = "^.*$";
+
+if($cond_term_cnt > 2){
+	echo "Please try again with fewer sample property arguments. <b>Max. allowed</b>: 2";
+        echo "<br/><br/><br/><br/><br/><br/><br/><br/><br/>";
+	include('footer.php');
+	exit;
 }
+
+
+#if($sample_properties_to_search == ''){
+#	$cond_query_term = "^.*$";
+#}
 
 $sql_query = "SELECT ACCESSION_NUMBER,TAXON FROM DATASETS WHERE DESCRIPTION REGEXP '".$cond_query_term."'";
 $query_result = mysqli_query($conn, $sql_query)
@@ -198,6 +221,8 @@ if (mysqli_num_rows($query_result) > 0) {
 		$cur_dataset = $res_row["ACCESSION_NUMBER"];
 		$cur_taxon = $res_row["TAXON"];
 		if($cur_taxon == $implied_organism){
+			$selected_datasets[] = $cur_dataset;
+		} elseif( $implied_organism == ''){
 			$selected_datasets[] = $cur_dataset;
 		}
 	}
@@ -244,9 +269,27 @@ $datasets_query_term = substr($datasets_query_term, 0 , -1);
 #mirnas
 $mirnas_query_term = '';
 $mirnas_to_query = split(",", $mirs_to_search);
+$mirnas_term_cnt = 0;
 foreach ($mirnas_to_query as $mir){
         $mir = trim($mir);
-	$mirnas_query_term .= $mir."|";
+
+	$pattern = "/^(hsa\-|mmu\-|)(let\-7|mi(r|R)\-[0-9]*)/";
+	if(preg_match($pattern, $mir)){
+		$mirnas_query_term .= $mir."|";
+		$mirnas_term_cnt++;
+	} 
+}
+
+if( $mirnas_query_term == ''){
+	echo "No results found. Please use at least one <b>valid miRNA id or family</b> argument.";
+	echo "<br/><br/><br/><br/><br/><br/><br/><br/><br/>";
+	include('footer.php');
+	exit;
+} elseif( $mirnas_term_cnt > 10){
+	echo "Please try again with fewer miRNA id arguments. <b>Max. allowed</b>: 10";
+	echo "<br/><br/><br/><br/><br/><br/><br/><br/><br/>";
+	include('footer.php');
+	exit;
 }
 
 $mirnas_query_term = substr($mirnas_query_term, 0, -1);
@@ -255,33 +298,35 @@ $mirnas_query_term = substr($mirnas_query_term, 0, -1);
 # main query
 $mod_sql_query = "SELECT * FROM mircounts_full_view WHERE ACCESSION_NUMBER_REF REGEXP '".$datasets_query_term."' AND MATURE_MIR_ID_REF REGEXP '".$mirnas_query_term."'";
 
-#echo $mod_sql_query;
+#$mod_sql_query = "SELECT * FROM mircounts_full_view WHERE id IN ( SELECT id FROM DATASETS_MATURE_MIRNAS WHERE ACCESSION_NUMBER_REF REGEXP '".$datasets_query_term."' AND MATURE_MIR_ID_REF REGEXP '".$mirnas_query_term."' ) ORDER BY `position` DESC";
+
 
 $query_result = mysqli_query($conn, $mod_sql_query)
     or die("Error: " . mysqli_error($conn));
+#echo $mod_sql_query;
 
-# generate tmp uuid - look chimira's index.php page
-$uuid = uniqid();
 
 
 $tmp_file = "tmp/".$uuid.".tmp";
-#$tmp_file_header = "MIRNA\tMODIFICATION_TYPE\tMODIFICATION_ARM\tMODIFICATION_PATTERN\tMODIFICATION_POSITION\tINTERNAL_MOD_TYPE\tINTERNAL_MOD_PATTERN\tINTERNAL_MOD_POSITION\tDOUBLED\tprocessed.counts";
-#file_put_contents($tmp_file, $tmp_file_header);
+$tmp_ajax_file = "tmp/".$uuid.".ajax.table.counts";
 
-echo "<table id='mod_stats_by_mir_table' class='display'>";
-echo "<thead>";
-echo "<tr>";
-echo "<th>Dataset</th><th>miRNA</th><th>mod type</th><th>arm</th><th>pattern</th><th>position</th><th>internal mod type</th><th>internal pattern</th><th>internal position</th><th>Doubled</th><th>counts</th>";
-echo "</tr></thead><tbody>";
 
 $full_table_str = "Num_id,Accession Number,miRNA id,Modification type,Arm,Pattern,Position,Internal modification type, Internal pattern, Internal position, Doubled, Raw Counts\n";
+$full_ajax_str = "{ \"aaData\": [\n";
+
 
 $cur_descr = '-';
 $tt = '';
+$ommit = True;
 if (mysqli_num_rows($query_result) > 0) {
 
 	while($mod_row = mysqli_fetch_assoc($query_result)) {
 
+		if($ommit == True){
+			$ommit = False;
+		} else{
+			$full_ajax_str .= ",\n";
+		}
 	# ----> continue here
 	# - store results to file
 	# - then parse file with R script in order to make graphics with D3.js 
@@ -298,20 +343,23 @@ if (mysqli_num_rows($query_result) > 0) {
 		$doubled = $mod_row["doubled"];
 		$raw_counts = $mod_row["raw_counts"];
 
-		echo "<tr>";
-		echo "<td>$tmp_dataset</td><td>$mir</td><td>$mod_type</td><td>$mod_arm</td><td>$mod_pattern</td><td>$mod_position</td><td>$internal_mod_type</td><td>$internal_pattern</td><td>$internal_position</td><td>$doubled</td><td>$raw_counts</td>";
-		echo "</tr>";
+		#echo "<tr>";
+		#echo "<td>$tmp_dataset</td><td>$mir</td><td>$mod_type</td><td>$mod_arm</td><td>$mod_pattern</td><td>$mod_position</td><td>$internal_mod_type</td><td>$internal_pattern</td><td>$internal_position</td><td>$doubled</td><td>$raw_counts</td>";
+		#echo "</tr>";
 		
 		$full_table_str .= "0,$tmp_dataset,$mir,$mod_type,$mod_arm,$mod_pattern,$mod_position,$internal_mod_type,$internal_pattern,$internal_position,$doubled,$raw_counts\n";
 
+		$full_ajax_str .= "[\"$tmp_dataset\", \"$mir\", \"$mod_type\", \"$mod_arm\", \"$mod_pattern\", \"$mod_position\", \"$internal_mod_type\", \"$internal_pattern\", \"$internal_position\", \"$doubled\", \"$raw_counts\"]";
 #		$tt = $mod_row;
 #		print_r($tt);
 	}
 }
+$full_ajax_str .= "] }";
 
 file_put_contents($tmp_file, $full_table_str);
-echo "</tbody></table><br/><br/><br/>";
+file_put_contents($tmp_ajax_file, $full_ajax_str);
 #print_r($tt);
+
 
 $tmp_file = $uuid.".tmp";
 $query_mod_out = shell_exec("./cgi-bin/query_modifications.sh $tmp_file");
@@ -352,12 +400,33 @@ echo "});\n";
 echo "</script>\n";
 
 
-
-
-
-
 }
+
 ?>
+
+
+<table id='mod_stats_by_mir_table' class='display'>
+	<thead>
+		<tr>
+			<th>Dataset</th>
+			<th>miRNA</th>
+			<th>mod type</th>
+			<th>arm</th>
+			<th>pattern</th>
+			<th>position</th>
+			<th>internal mod type</th>
+			<th>internal pattern</th>
+			<th>internal position</th>
+			<th>Doubled</th>
+			<th>counts</th>
+		</tr>
+	</thead>
+</table>
+
+<br/><br/><br/>
+
+
+
 
     <br/><br/><br/>
 

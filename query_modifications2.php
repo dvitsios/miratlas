@@ -1,8 +1,14 @@
+<?php
+	# generate tmp uuid 
+	$uuid = uniqid();
+?>
+
 <html>
 
 
 <head>
 <meta charset="utf-8" />
+<link rel="stylesheet" type="text/css" href="./viz_factory/assets/c3.css">
 <link href="css/main.css" type="text/css" rel="stylesheet">
 <link href="./assets/DataTables-1.10.4/media/css/jquery.dataTables.min.css" rel="stylesheet">
 <link href="./assets/DataTables-1.10.4/extensions/ColVis/css/dataTables.colVis.css" rel="stylesheet">
@@ -11,6 +17,8 @@
 <link rel="stylesheet" href="./css/jquery-ui.css">
 <link href="./css/tablesorter.theme.default.css" rel="stylesheet">
 
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script type="text/javascript" src="./viz_factory/assets/c3.js"></script>
 <script type="text/javascript" src="./assets/jquery.min.js"></script>
 <script type="text/javascript" src="./assets/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="./assets/jquery-ui.js"></script>
@@ -59,8 +67,12 @@
                 });
             });
 
+	    var uuid = "<?php echo $uuid; ?>";
+	    var plain_ajax_src = 'tmp/'+uuid+'.ajax.table.counts';
+
 	    $('table#mod_stats_by_pattern').dataTable( {
 	    	"dom": 'T<"clear">lfrtip',
+		"sAjaxSource": plain_ajax_src,
 		"tableTools": {
 			"aButtons":
 				[
@@ -81,9 +93,9 @@
 		"aLengthMenu": [[10, 20, 40, -1], [10, 20, 40, "All"]],
 		"caseInsensitive": true,
 		"searching": true,
-		"deferRender": false,
+		"deferRender": true,
 		"order": [[ 10, "desc" ]],
-		"bProcessing": true,
+		"bProcessing": true
 		});
     });
 
@@ -156,23 +168,69 @@ echo $sample_properties_to_search."<br/>";
 echo "</div>";
 
 echo "<h2>Results</h2><hr/>";
-#if($patterns_to_search == '' or $sample_properties_to_search == ''){
-if($patterns_to_search == ''){
-        echo "Please specify a modification pattern for your query.";
+if($patterns_to_search == '' or $sample_properties_to_search == ''){
+#if($patterns_to_search == ''){
+	echo "No results found. Please specify an argument at all input fields.";
+	echo "<br/><br/><br/><br/><br/><br/><br/><br/><br/>";
+	include('footer.php');
+	exit;
+
 } else{
+
+
+
 # select datasets that correspond to the input sample properties
 $selected_datasets = array();
 
 $cond_query_term = '';
+$cond_term_cnt = 0;
 $conditions_to_query = split(",", $sample_properties_to_search);
 foreach ($conditions_to_query as $cond){
 	$cond = trim($cond);
 	$cond_query_term .= $cond."|";
+	$cond_term_cnt++;
 }
 $cond_query_term = substr($cond_query_term, 0, -1);
-if($sample_properties_to_search == ''){
-	$cond_query_term ="^.*$";
+if($cond_term_cnt > 2){
+	echo "Please try again with fewer sample property arguments. <b>Max. allowed</b>: 2";
+	echo "<br/><br/><br/><br/><br/><br/><br/><br/><br/>";
+	include('footer.php');
+	exit;
 }
+
+
+#patterns
+$patterns_query_term = '';
+$patterns_term_cnt = 0;
+$patterns_to_query = split(",", $patterns_to_search);
+foreach ($patterns_to_query as $mod_pattern){
+
+	$mod_pattern = trim($mod_pattern);
+
+	$pattern = "/^[ACGUTNX]*$/";
+	if(preg_match($pattern, $mod_pattern)){
+		$patterns_query_term .= '[[:<:]]'.$mod_pattern."[[:>:]]|";
+		$patterns_term_cnt++;
+	}
+}
+
+$patterns_query_term = substr($patterns_query_term, 0, -1);
+
+if( $patterns_query_term == ''){
+	echo "No results found. Please use at least one <b>valid modification pattern</b> argument.";
+	echo "<br/><br/><br/><br/><br/><br/><br/><br/><br/>";
+	include('footer.php');
+	exit;
+} elseif( $patterns_term_cnt > 4 ){
+	echo "Please try again with fewer modification pattern arguments. <b>Max. allowed</b>: 4";
+	echo "<br/><br/><br/><br/><br/><br/><br/><br/><br/>";
+	include('footer.php');
+	exit;
+}
+
+#if($sample_properties_to_search == ''){
+#	$cond_query_term ="^.*$";
+#}
 
 $sql_query = "SELECT ACCESSION_NUMBER,TAXON FROM DATASETS WHERE DESCRIPTION REGEXP '".$cond_query_term."'";
 $query_result = mysqli_query($conn, $sql_query)
@@ -228,19 +286,20 @@ $datasets_query_term = substr($datasets_query_term, 0 , -1);
 
 #echo $datasets_query_term_to_echo."<br/>";
 
-#mirnas
-$patterns_query_term = '';
-$patterns_to_query = split(",", $patterns_to_search);
-foreach ($patterns_to_query as $pattern){
-	$patterns_query_term .= $pattern."|";
-}
 
-$patterns_query_term = $patterns_to_search;
+echo "<div class='adv_mod_search_category' style='width:98%'>";
+echo "<b>Aggregate modifications profile</b>";
+echo "</div>";
+echo "<div style='background-color:#f7f7f7; padding:5px'>";
+echo "<div id='global_mods_profile' style='height:300px; width:auto'></div>";
+echo "</div>";
+echo "<br/><hr/>";
+#$patterns_query_term = $patterns_to_search;
 
 #echo $patterns_query_term."<br/>";
 
 # main query
-$mod_sql_query = "SELECT * FROM mircounts_full_view WHERE ACCESSION_NUMBER_REF REGEXP '".$datasets_query_term."' AND pattern='".$patterns_query_term."'";
+$mod_sql_query = "SELECT * FROM mircounts_full_view WHERE ACCESSION_NUMBER_REF REGEXP '".$datasets_query_term."' AND pattern REGEXP '".$patterns_query_term."'";
 
 if($species_to_query !== ''){
 	$mod_sql_query .= " AND MATURE_MIR_ID_REF REGEXP '".$species_to_query."'";
@@ -251,23 +310,29 @@ if($species_to_query !== ''){
 $query_result = mysqli_query($conn, $mod_sql_query)
     or die("Error: " . mysqli_error($conn));
 
-# generate tmp uuid - look chimira's index.php page
-#$uuid =  123;
-#$tmp_file = "tmp/$uuid.tmp";
-#$tmp_file_header = "MIRNA\tMODIFICATION_TYPE\tMODIFICATION_ARM\tMODIFICATION_PATTERN\tMODIFICATION_POSITION\tINTERNAL_MOD_TYPE\tINTERNAL_MOD_PATTERN\tINTERNAL_MOD_POSITION\tDOUBLED\tprocessed.counts";
+
+$tmp_file = "tmp/".$uuid.".tmp";
+$tmp_ajax_file = "tmp/".$uuid.".ajax.table.counts";
 #file_put_contents($tmp_file, $tmp_file_header);
 
-echo "<table id='mod_stats_by_pattern' class='display'>";
-echo "<thead>";
-echo "<tr>";
-echo "<th>Dataset</th><th>miRNA</th><th>mod type</th><th>arm</th><th>pattern</th><th>position</th><th>internal mod type</th><th>internal pattern</th><th>internal position</th><th>Doubled</th><th>counts</th>";
-echo "</tr></thead><tbody>";
+
+$full_table_str = "Num_id,Accession Number,miRNA id,Modification type,Arm,Pattern,Position,Internal modification type, Internal pattern, Internal position, Doubled, Raw Counts\n";
+$full_ajax_str = "{ \"aaData\": [\n";
+
 
 $cur_descr = '-';
 $tt = '';
+$ommit = True;
 if (mysqli_num_rows($query_result) > 0) {
 
 	while($mod_row = mysqli_fetch_assoc($query_result)) {
+
+		if($ommit == True){
+			$ommit = False;
+		} else{
+			$full_ajax_str .= ",\n";
+		}
+
 
 	# ----> continue here
 	# - store results to file
@@ -285,28 +350,78 @@ if (mysqli_num_rows($query_result) > 0) {
 		$doubled = $mod_row["doubled"];
 		$raw_counts = $mod_row["raw_counts"];
 
-		echo "<tr>";
-		echo "<td>$tmp_dataset</td><td>$mir</td><td>$mod_type</td><td>$mod_arm</td><td>$mod_pattern</td><td>$mod_position</td><td>$internal_mod_type</td><td>$internal_pattern</td><td>$internal_position</td><td>$doubled</td><td>$raw_counts</td>";
-		echo "</tr>";
-		
+		$full_table_str .= "0,$tmp_dataset,$mir,$mod_type,$mod_arm,$mod_pattern,$mod_position,$internal_mod_type,$internal_pattern,$internal_position,$doubled,$raw_counts\n";
 
-		$tt = $mod_row;
+		$full_ajax_str .= "[\"$tmp_dataset\", \"$mir\", \"$mod_type\", \"$mod_arm\", \"$mod_pattern\", \"$mod_position\", \"$internal_mod_type\", \"$internal_pattern\", \"$internal_position\", \"$doubled\", \"$raw_counts\"]";
 
-#		echo "$tmp_dataset<br/>";
-#		print_r($tt);
 	}
 }
 
-echo "</tbody></table><br/><br/><br/>";
-#print_r($tt);
+$full_ajax_str .= "] }";
 
-#$query_mod_out = shell_exec("./cgi-bin/query_modifications.sh");
-#echo $query_mod_out."<br/>";
+file_put_contents($tmp_file, $full_table_str);
+file_put_contents($tmp_ajax_file, $full_ajax_str);
+
+
+$tmp_file = $uuid.".tmp";
+$query_mod_out = shell_exec("./cgi-bin/query_modifications.sh $tmp_file");
+echo $query_mod_out."<br/>";
+
+$viz_input_file = $uuid.".global_mods_profile_data.csv";
+$global_mods_profile_path = "tmp/".$viz_input_file;
+
+echo "<script>\n";
+echo "var uuid = '".$uuid."';\n";
+echo "var div_for_bind = '#global_mods_profile';\n";
+#echo "var global_mods_profile_path = './tmp/".$uuid.".global_mods_profile_data.csv'";
+echo "var global_mods_profile_path = '".$global_mods_profile_path."';\n";
+
+echo "var chart = c3.generate({\n";
+echo "bindto: div_for_bind,\n";
+echo "data: {\n";
+echo "x : 'mirna_index',\n";
+echo "url: global_mods_profile_path,\n";
+echo "type: 'bar',\n";
+echo "groups: [\n";
+echo "['U', 'A', 'C', 'G', 'G_adar', 'A_snp', 'U_snp', 'G_snp', 'C_snp']\n";
+echo "]\n";
+echo "},\n";
+echo "axis: {\n";
+echo "x: {\n";
+echo "type: 'category'\n";
+echo "}},\n";
+echo "grid: {\n";
+echo "x: {\n";
+echo "show: true\n";
+echo "},\n";
+echo "y: {\n";
+echo "show: true }\n";
+echo "}\n";
+echo "});\n";
+echo "</script>\n";
+
 }
 
 ?>
-
-    <br/><br/><br/>
+<table id='mod_stats_by_pattern' class='display'>
+<thead>
+	<tr>
+		<th>Dataset</th>
+		<th>miRNA</th>
+		<th>mod type</th>
+		<th>arm</th>
+		<th>pattern</th>
+		<th>position</th>
+		<th>internal mod type</th>
+		<th>internal pattern</th>
+		<th>internal position</th>
+		<th>Doubled</th>
+		<th>counts</th>
+	</tr>
+</thead>
+</table>
+																<br/><br/><br/>
+<br/><br/><br/>
 
     <?php include('footer.php') ?>
     </div>

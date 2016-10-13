@@ -119,12 +119,52 @@
 		<li><span>
 		<b>Modification Stats by: 'miRNA'</b>: display aggregate modifications profile for a particular miRNA or set of miRNAs across a specific condifition (e.g. tissue or disease).
 		</span></li>
+
+		<br/>
+		<span style='font-family:courier'>> Accepted miRNA ID formats:</span>
+		<div style='width: 30%; background-color:#f5f5f5; padding: 10px; padding-top:6px; padding-bottom:6px'>
+		<div style='padding-top:2px'>e.g.</div>
+			<ul>
+			<li>hsa-let-7</li>
+			<li>mmu-mir-100</li>
+			<li>mir-21a-</li>
+			<li>mir-11</li>
+			<li>mir-92a-3p</li>
+			<li>mir-92a-1-5p</li>
+			</ul>
+			<b>Max. number of arguments</b>: 10<br/> 
+			(comma separated)
+		</div>
+		<br/>
+		<br/>
+		<span style='font-family:courier'>> Accepted sample properies:</span>
+		<div style='width: 30%; background-color:#f5f5f5; padding: 15px;'>
+		Any annotation term associated with the <b>Description</b> property of the datasets<br/> 
+		(available at the <b>Browse</b> menu)<br/><br/>
+		<b>Max. number of terms</b>: 2<br/>
+		(comma separated)
+		</div>
+
 		<br/>
 		<img src='images/help/png/custom_mir_mod_profile.png' style='width:80%;height:auto; border:1px solid #ccc;'>
 		<br/><br/>
 		<li><span>
 		<b>Modification Stats by: 'modification pattern'</b>: display table with modification counts for a particular modification pattern across a specific condifition (e.g. tissue or disease).
 		</span></li>
+		<br/>
+		<span style='font-family:courier'>> Accepted modification patterns:</span>
+		<div style='width: 40%; background-color:#f5f5f5; padding: 10px; padding-top:6px; padding-bottom:6px'>
+		<div style='padding-top:2px'>Any sequence containing any combination of the <b>AGCU</b> letters, e.g.</div>
+		<br/>
+			<ul>
+			<li>UUU</li>
+			<li>GAG</li>
+			<li>A</li>
+			</ul>
+			Please note that this tool is querying against <b>exact matches</b> for each of the provided modification patterns.<br/><br/>
+			<b>Max. number of arguments</b>: 4<br/> 
+			(comma separated)
+		</div>
 		<br/>
 		<img src='images/help/png/custom_pattern_mod_profile.png' style='width:80%;height:auto; border:1px solid #ccc;'>
 		<br/><br/>
