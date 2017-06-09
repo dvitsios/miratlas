@@ -3,7 +3,7 @@
 print "Content-type: text/html\n\n";
 
 open( my $FH, '>tmp.txt');
-print $FH "heyho, test passed!";
+print $FH "Test passed!";
 close(FH);
 
 print <<"EOF";

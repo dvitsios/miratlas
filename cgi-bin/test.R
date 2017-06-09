@@ -1,2 +1,1 @@
-print("R works!!")
-write('yala', file='./temp_R_generated.txt')
+print("R installation is active.")
