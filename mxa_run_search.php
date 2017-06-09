@@ -125,6 +125,7 @@
             }
         </script>
 
+	<?php include_once("analyticstracking.php") ?>
     </head>
 
     <body>
@@ -427,7 +428,7 @@ echo "<div style='margin-bottom: 20px;'></div>";
     
             $cur_table_str .= "</tbody></table>";
 //A9E2F3
-            echo "<div style='font-size:16px; color: black; border:1px solid black; background-color:#f7f5f0; padding:8px; margin-bottom:5px;'><b>'$cur_mir'</b> expression:</div>";
+            echo "<div style='font-size:16px; color: black; border:1px solid black; background-color:#c6dbef; padding:8px; margin-bottom:5px;'><b>'$cur_mir'</b> expression:</div>";
             echo $cur_table_str;
             echo "<br/><br/><br/>";
 

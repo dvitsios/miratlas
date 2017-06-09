@@ -70,7 +70,7 @@ $.get("generate_csv_get_file.php");
 
 }
 </script>
-
+<?php include_once("analyticstracking.php") ?>
 </head>
 
 <body>

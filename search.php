@@ -153,7 +153,7 @@
 <br/>
 <br/>
 
-<div class='adv_mod_search_category' id='data_search' style='width:68%'>
+<div class='adv_mod_search_category' id='data_search' style='width:68%; background: #c6dbef'>
   <b>Search for Datasets</b>
 </div>
 

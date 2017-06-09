@@ -6,6 +6,7 @@
 
         <script type="text/javascript" src="./assets/jquery.min.js"></script> 
 
+	<?php include_once("analyticstracking.php") ?>
     </head>
 
 

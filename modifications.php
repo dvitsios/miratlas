@@ -117,7 +117,7 @@ Modification Stats by: 'miRNA'
 </div>
 
 
-<div class='adv_mod_search_category' style='width:68%'>
+<div class='adv_mod_search_category' style='width:68%; background: #c6dbef'>
 Modification Stats by: 'mod. pattern'
 </div>
 

@@ -123,6 +123,7 @@
             }
 
         </script>
+	<?php include_once("analyticstracking.php") ?>
     </head>
 
     <body id="full_page_div">

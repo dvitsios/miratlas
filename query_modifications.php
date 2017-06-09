@@ -101,6 +101,7 @@
 
 
 </script>
+<?php include_once("analyticstracking.php") ?>
 </head>
 
 

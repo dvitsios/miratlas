@@ -9,8 +9,8 @@
         <script type="text/javascript" src="./assets/jquery.min.js"></script> 
         <script type="text/javascript" src="./assets/jquery.dataTables.min.js"></script> 
         <script type="text/javascript" src="./assets/jquery.tablesorter.min.js"></script> 
-    
-
+	    
+	<?php include_once("analyticstracking.php") ?>
     </head>
 
     <body>
